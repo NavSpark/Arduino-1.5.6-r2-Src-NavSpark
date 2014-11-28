@@ -1,0 +1,143 @@
+# See: http://www.skytraq.com.tw
+
+menu.cpu=Processor
+
+##############################################################
+
+NavSparkGPS.name=NavSpark (GPS)
+
+NavSparkGPS.upload.tool=NavSparkDownloadCmd
+NavSparkGPS.upload.protocol=NavSpark
+NavSparkGPS.upload.params.verbose=-v -v -v -v
+NavSparkGPS.upload.params.quiet=-q -q
+NavSparkGPS.upload.bin_file="{runtime.ide.path}/hardware/arduino/leon/firmwares/{build.variant}/{build.project_name}.bin"
+NavSparkGPS.upload.pattern={runtime.ide.path}/hardware/tools/NavSparkDownloadCmd -p {serial.port} -b {upload.cmd_baudrate} -i {upload.bin_file} -s {upload.data_baudrate}
+
+NavSparkGPS.bootloader.tool=NavSparkDownloadCmd
+
+NavSparkGPS.build.board=LEON-NAVSPARK-GPS
+NavSparkGPS.build.f_cpu=100000000L
+NavSparkGPS.build.core=arduino
+NavSparkGPS.build.mcu=v8
+
+## NavSpark (GPS) with GNSS capability
+NavSparkGPS.menu.cpu.venus822a=Leon3 with GNSS library
+
+NavSparkGPS.menu.cpu.venus822a.upload.maximum_size=1048576
+NavSparkGPS.menu.cpu.venus822a.upload.cmd_baudrate=115200
+NavSparkGPS.menu.cpu.venus822a.upload.data_baudrate=115200
+
+NavSparkGPS.menu.cpu.venus822a.build.variant=venus822
+NavSparkGPS.menu.cpu.venus822a.build.baudrate=115200
+NavSparkGPS.menu.cpu.venus822a.build.uart1_nmea_output=1
+NavSparkGPS.menu.cpu.venus822a.build.io_lib=sti_io_lib.a
+NavSparkGPS.menu.cpu.venus822a.build.const_sel=1
+NavSparkGPS.menu.cpu.venus822a.build.sdk_lib=sti_gps_lib.a
+
+## NavSpark (GPS) without GNSS capability
+NavSparkGPS.menu.cpu.venus822b=Leon3 without GNSS library
+
+NavSparkGPS.menu.cpu.venus822b.upload.maximum_size=1048576
+NavSparkGPS.menu.cpu.venus822b.upload.cmd_baudrate=115200
+NavSparkGPS.menu.cpu.venus822b.upload.data_baudrate=115200
+
+NavSparkGPS.menu.cpu.venus822b.build.variant=venus822
+NavSparkGPS.menu.cpu.venus822b.build.baudrate=115200
+NavSparkGPS.menu.cpu.venus822b.build.uart1_nmea_output=0
+NavSparkGPS.menu.cpu.venus822b.build.io_lib=sti_io_lib.a
+NavSparkGPS.menu.cpu.venus822b.build.const_sel=1
+NavSparkGPS.menu.cpu.venus822b.build.sdk_lib=sti_sdk_16MHz_lib.a
+
+##############################################################
+
+NavSparkBD.name=NavSpark-BD
+
+NavSparkBD.upload.tool=NavSparkDownloadCmd
+NavSparkBD.upload.protocol=NavSpark
+NavSparkBD.upload.params.verbose=-v -v -v -v
+NavSparkBD.upload.params.quiet=-q -q
+NavSparkBD.upload.bin_file="{runtime.ide.path}/hardware/arduino/leon/firmwares/{build.variant}/{build.project_name}.bin"
+NavSparkBD.upload.pattern={runtime.ide.path}/hardware/tools/NavSparkDownloadCmd -p {serial.port} -b {upload.cmd_baudrate} -i {upload.bin_file} -s {upload.data_baudrate}
+
+NavSparkBD.bootloader.tool=NavSparkDownloadCmd
+
+NavSparkBD.build.board=LEON-NAVSPARK-BD
+NavSparkBD.build.f_cpu=100000000L
+NavSparkBD.build.core=arduino
+NavSparkBD.build.mcu=v8
+
+## NavSpark-BD with GNSS capability
+NavSparkBD.menu.cpu.venus822c=Leon3 with GNSS library
+
+NavSparkBD.menu.cpu.venus822c.upload.maximum_size=1048576
+NavSparkBD.menu.cpu.venus822c.upload.cmd_baudrate=115200
+NavSparkBD.menu.cpu.venus822c.upload.data_baudrate=115200
+
+NavSparkBD.menu.cpu.venus822c.build.variant=venus822
+NavSparkBD.menu.cpu.venus822c.build.baudrate=115200
+NavSparkBD.menu.cpu.venus822c.build.uart1_nmea_output=1
+NavSparkBD.menu.cpu.venus822c.build.io_lib=sti_io_lib.a
+NavSparkBD.menu.cpu.venus822c.build.const_sel=2
+NavSparkBD.menu.cpu.venus822c.build.sdk_lib=sti_gps_bd2_lib.a
+
+## NavSpark-BD without GNSS capability
+NavSparkBD.menu.cpu.venus822d=Leon3 without GNSS library
+
+NavSparkBD.menu.cpu.venus822d.upload.maximum_size=1048576
+NavSparkBD.menu.cpu.venus822d.upload.cmd_baudrate=115200
+NavSparkBD.menu.cpu.venus822d.upload.data_baudrate=115200
+
+NavSparkBD.menu.cpu.venus822d.build.variant=venus822
+NavSparkBD.menu.cpu.venus822d.build.baudrate=115200
+NavSparkBD.menu.cpu.venus822d.build.uart1_nmea_output=0
+NavSparkBD.menu.cpu.venus822d.build.io_lib=sti_io_lib.a
+NavSparkBD.menu.cpu.venus822d.build.const_sel=2
+NavSparkBD.menu.cpu.venus822d.build.sdk_lib=sti_sdk_16MHz_lib.a
+
+##############################################################
+
+NavSparkGLN.name=NavSpark-GL
+
+NavSparkGLN.upload.tool=NavSparkDownloadCmd
+NavSparkGLN.upload.protocol=NavSpark
+NavSparkGLN.upload.params.verbose=-v -v -v -v
+NavSparkGLN.upload.params.quiet=-q -q
+NavSparkGLN.upload.bin_file="{runtime.ide.path}/hardware/arduino/leon/firmwares/{build.variant}/{build.project_name}.bin"
+NavSparkGLN.upload.pattern={runtime.ide.path}/hardware/tools/NavSparkDownloadCmd -p {serial.port} -b {upload.cmd_baudrate} -i {upload.bin_file} -s {upload.data_baudrate}
+
+NavSparkGLN.bootloader.tool=NavSparkDownloadCmd
+
+NavSparkGLN.build.board=LEON-NAVSPARK-GL
+NavSparkGLN.build.f_cpu=100000000L
+NavSparkGLN.build.core=arduino
+NavSparkGLN.build.mcu=v8
+
+## NavSpark-GL with GNSS capability
+NavSparkGLN.menu.cpu.venus822e=Leon3 with GNSS library
+
+NavSparkGLN.menu.cpu.venus822e.upload.maximum_size=1048576
+NavSparkGLN.menu.cpu.venus822e.upload.cmd_baudrate=115200
+NavSparkGLN.menu.cpu.venus822e.upload.data_baudrate=115200
+
+NavSparkGLN.menu.cpu.venus822e.build.variant=venus822
+NavSparkGLN.menu.cpu.venus822e.build.baudrate=115200
+NavSparkGLN.menu.cpu.venus822e.build.uart1_nmea_output=1
+NavSparkGLN.menu.cpu.venus822e.build.io_lib=sti_io_lib.a
+NavSparkGLN.menu.cpu.venus822e.build.const_sel=3
+NavSparkGLN.menu.cpu.venus822e.build.sdk_lib=sti_gps_gln_lib.a
+
+## NavSpark-GL without GNSS capability
+NavSparkGLN.menu.cpu.venus822f=Leon3 without GNSS library
+
+NavSparkGLN.menu.cpu.venus822f.upload.maximum_size=1048576
+NavSparkGLN.menu.cpu.venus822f.upload.cmd_baudrate=115200
+NavSparkGLN.menu.cpu.venus822f.upload.data_baudrate=115200
+
+NavSparkGLN.menu.cpu.venus822f.build.variant=venus822
+NavSparkGLN.menu.cpu.venus822f.build.baudrate=115200
+NavSparkGLN.menu.cpu.venus822f.build.uart1_nmea_output=0
+NavSparkGLN.menu.cpu.venus822f.build.io_lib=sti_io_lib.a
+NavSparkGLN.menu.cpu.venus822f.build.const_sel=3
+NavSparkGLN.menu.cpu.venus822f.build.sdk_lib=sti_sdk_24MHz_lib.a
+
+##############################################################

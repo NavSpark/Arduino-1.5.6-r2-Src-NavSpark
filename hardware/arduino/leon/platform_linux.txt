@@ -1,0 +1,86 @@
+
+# SPARC compile variablestest
+# ---------------------
+
+name=Arduino NavSpark Boards
+# Default "compiler.path" is correct, change only if you want to overidde the initial value
+compiler.path=/opt/sparc-elf-3.4.4/bin/
+
+# compiler for C source files
+compiler.c.cmd=sparc-elf-gcc
+compiler.c.flags=-MMD -MG -Wall -c -g -O2 -funswitch-loops -fweb -frename-registers -mv8 -mfpu -mcpu={build.mcu}
+
+#
+compiler.S.flags=-c -g -assembler-with-cpp
+
+# compiler for C++ source files
+compiler.cpp.cmd=sparc-elf-g++
+compiler.cpp.flags=-MMD -MG -Wall -c -g -O2 -fno-rtti -fno-exceptions -funswitch-loops -fweb -frename-registers -mv8 -mfpu -mcpu={build.mcu}
+
+# compiler for building archive (core.a)
+compiler.ar.cmd=sparc-elf-ar
+compiler.ar.flags=rcs
+
+# compiler for ELF linker
+compiler.c.elf.cmd=sparc-elf-gcc
+compiler.c.elf.flags=-Wl,--gc-sections -mv8 -Ttext=0x40000000 -lm
+compiler.c.elf.lib="{runtime.ide.path}/hardware/arduino/leon/libraries/{build.variant}/{build.io_lib}" "{runtime.ide.path}/hardware/arduino/leon/libraries/{build.variant}/{build.sdk_lib}"
+compiler.c.elf.out="{runtime.ide.path}/hardware/arduino/leon/firmwares/{build.variant}/{build.project_name}.elf"
+
+# compiler for generating PROM file
+compiler.prom.cmd=sparc-elf-mkprom
+compiler.prom.flags=-Xlinker -L. -Tdata=0x60000000 -freq 100 -rmw -romws 5 -ramwidth 16 -ramrws 3 -ramwws 3 -stack 0x6002ffd0 -mv8 -lsmall -lm
+
+# compiler for generating binary executable file
+compiler.prom2hex.cmd=sparc-elf-objcopy
+compiler.prom2hex.flags=-I elf32-sparc -O binary
+compiler.prom2hex.out="{runtime.ide.path}/hardware/arduino/leon/firmwares/{build.variant}/{build.project_name}.bin"
+
+# compiler for generating ASM file
+compiler.prom2asm.cmd=sparc-elf-objdump
+compiler.prom2asm.flags=-dS
+compiler.prom2asm.out="{runtime.ide.path}/hardware/arduino/leon/firmwares/{build.variant}/{build.project_name}.asm"
+
+compiler.ldflags=
+
+compiler.size.cmd=sparc-elf-size
+compiler.size.flags=-A --target=binary
+
+# this can be overriden in boards.txt
+build.extra_flags=
+
+# Sparc compile patterns
+# --------------------
+
+## 1. Compile c files
+recipe.c.o.pattern="{compiler.path}{compiler.c.cmd}" {compiler.c.flags} -DF_CPU={build.f_cpu} -DBAUDRATE={build.baudrate} -DUSE_UART1_FOR_NMEA={build.uart1_nmea_output} -DST_CONST_SEL={build.const_sel} -D{software}={runtime.ide.version} {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
+
+## 2. Compile c++ files
+recipe.cpp.o.pattern="{compiler.path}{compiler.cpp.cmd}" {compiler.cpp.flags} -DF_CPU={build.f_cpu} -DBAUDRATE={build.baudrate} -DUSE_UART1_FOR_NMEA={build.uart1_nmea_output} -DST_CONST_SEL={build.const_sel} -D{software}={runtime.ide.version} {build.extra_flags} {includes} "{source_file}" -o "{object_file}"
+
+## 3. Create archives
+recipe.ar.pattern="{compiler.path}{compiler.ar.cmd}" {compiler.ar.flags} "{build.path}/{archive_file}" "{object_file}"
+
+## 4. Create elf
+## {object_files} + {archive_file} + {compiler.c.elf.lib} --> {compiler.c.elf.out}
+## {object_files} = {build.path}/sketchxyz.cpp.o + ...
+## {archive_file} = core.a
+recipe.c.combine.pattern="{compiler.path}{compiler.c.elf.cmd}" {object_files} "{build.path}/{archive_file}" {compiler.c.elf.lib} {compiler.c.elf.flags} -o {compiler.c.elf.out}
+
+## 5. Create eeprom (default output: prom.out)
+## {object_file} + {archive_file} + {compiler.c.elf.lib} --> prom.out
+## {object_files} = {build.path}/sketchxyz.cpp.o + ...
+## {archive_file} = core.a
+recipe.objcopy.eep.pattern="{compiler.path}{compiler.prom.cmd}" {compiler.prom.flags} {object_files} "{build.path}/{archive_file}" {compiler.c.elf.lib}
+
+## 6. Create hex
+## prom.out --> {compiler.prom2hex.out}
+recipe.objcopy.hex.pattern="{compiler.path}{compiler.prom2hex.cmd}" {compiler.prom2hex.flags} prom.out {compiler.prom2hex.out}
+
+## 7. Create asm from eeprom
+## prom.out --> {compiler.prom2asm.out}
+recipe.objdump.hex.pattern="{compiler.path}{compiler.prom2asm.cmd}" {compiler.prom2asm.flags} prom.out > {compiler.prom2asm.out}
+
+## Compute size
+recipe.size.pattern="{compiler.path}{compiler.size.cmd}" {compiler.size.flags} "{runtime.ide.path}/hardware/arduino/leon/firmwares/{build.variant}/{build.project_name}.bin"
+recipe.size.regex=Total\s+([0-9]+).*
