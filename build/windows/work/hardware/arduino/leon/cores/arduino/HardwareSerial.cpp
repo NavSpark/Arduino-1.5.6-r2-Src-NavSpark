@@ -24,6 +24,7 @@
 #include "stdint.h"
 #include "sti_gnss_lib.h"
 #include "HardwareSerial.h"
+#include "Wiring_intr.h"
 
 // **********************************************************************
 // Description: declaration of functions exported in C naming convention
@@ -183,13 +184,13 @@ int HardwareSerial::read(void)
 	if (enabled == true) {
 		if (recv.numData) {
 			// disable interrupt for integrity
-			gnss_uart_critical_section_enable(port_id);
+      gnss_disable_irq(UART_ISR_NUMBER);
 			// get 1-byte data from buffer
 			rxd = recv.buffer[recv.tail];
 			recv.tail = (recv.tail + 1) % SERIAL_RING_BUFFER_SIZE;
 			recv.numData--;
 			// enable interrupt
-			gnss_uart_critical_section_disable(port_id);
+			gnss_enable_irq(UART_ISR_NUMBER);
 			return rxd;
 		}
 		else return -1;
@@ -221,7 +222,7 @@ void HardwareSerial::flush(void)
 #endif
 	if (enabled == true) {
 		// disable interrupt for integrity
-		gnss_uart_critical_section_enable(port_id);
+    gnss_disable_irq(UART_ISR_NUMBER);
 		// flush all Tx data in ring buffer to H/W FIFO
 		while (xmit.numData) {
 			if (gnss_uart_tx_status(port_id)==true) {
@@ -231,7 +232,7 @@ void HardwareSerial::flush(void)
 			}
 		}
 		// enable interrupt
-		gnss_uart_critical_section_disable(port_id);
+		gnss_enable_irq(UART_ISR_NUMBER);
 	}
 	else return;
 }
@@ -241,26 +242,28 @@ void HardwareSerial::flush(void)
 // **********************************************************************
 size_t HardwareSerial::write(uint8_t value)
 {
+  size_t flag = 0;
 #if defined(USE_UART1_FOR_NMEA) && (USE_UART1_FOR_NMEA==1)
 	if (port_id == NMEA_PORT_ID) return 0;
 #endif
 	if (enabled == true) {
+	  // disable interrupt for integrity
+    gnss_disable_irq(UART_ISR_NUMBER);
+		
 		if (xmit.numData < SERIAL_RING_BUFFER_SIZE) {
-			// disable interrupt for integrity
-			gnss_uart_critical_section_enable(port_id);
 			// put 1-byte data into ring buffer
 			xmit.buffer[xmit.head] = value;
 			xmit.head = (xmit.head + 1) % SERIAL_RING_BUFFER_SIZE;
 			xmit.numData++;
-			// enable interrupt
-			gnss_uart_critical_section_disable(port_id);
 			// turn on interrupt for Tx FIFO empty
 			v8_uart_set_txfifo_empty_intr(port_id, 1);
-			return 1;
+			flag = 1;
 		}
-		else return 0;
+		
+		// enable interrupt
+    gnss_enable_irq(UART_ISR_NUMBER);
 	}
-	return 0;
+	return flag;
 }
 
 // **********************************************************************
@@ -275,15 +278,17 @@ size_t HardwareSerial::write(uint8_t *data, size_t size)
 #endif
 	if (enabled == true) {
 		// disable interrupt for integrity
-		gnss_uart_critical_section_enable(port_id);
+    gnss_disable_irq(UART_ISR_NUMBER);
+		
 		while ((xmit.numData < SERIAL_RING_BUFFER_SIZE) && (numWritten < size)) {
 			xmit.buffer[xmit.head] = data[numWritten];
 			xmit.head = (xmit.head + 1) % SERIAL_RING_BUFFER_SIZE;
 			xmit.numData++;
 			numWritten++;
 		}
+	
 		// enable interrupt
-		gnss_uart_critical_section_disable(port_id);
+		gnss_enable_irq(UART_ISR_NUMBER);
 		// turn on interrupt for Tx FIFO empty
 		if (numWritten) {
 			v8_uart_set_txfifo_empty_intr(port_id, 1);
@@ -329,7 +334,7 @@ void HardwareSerial::isrRx(void)
 #endif
 
 	// disable interrupt for integrity
-	gnss_uart_critical_section_enable(port_id);
+	gnss_disable_irq(UART_ISR_NUMBER);
 
 	// RX: move data received in H/W FIFO to ring buffer
 	for (i = 0; i < gnss_uart_rx_status(port_id); i++) {
@@ -345,7 +350,7 @@ void HardwareSerial::isrRx(void)
 	}
 
 	// enable interrupt
-	gnss_uart_critical_section_disable(port_id);
+	gnss_enable_irq(UART_ISR_NUMBER);
 }
 
 void HardwareSerial::taskTx(void)
@@ -355,7 +360,7 @@ void HardwareSerial::taskTx(void)
 #endif
 
 	// disable interrupt for integrity
-	gnss_uart_critical_section_enable(port_id);
+	gnss_disable_irq(UART_ISR_NUMBER);
 
 	// TX: move data in ring buffer to H/W FIFO
 	while ((gnss_uart_tx_status(port_id)==true)
@@ -370,7 +375,7 @@ void HardwareSerial::taskTx(void)
 	}
 
 	// enable interrupt
-	gnss_uart_critical_section_disable(port_id);
+	gnss_enable_irq(UART_ISR_NUMBER);
 }
 
 // **********************************************************************
