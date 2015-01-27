@@ -11,17 +11,18 @@
 #include "st_const_gps_gln.h"
 #endif
 
-typedef signed   char      S08;
-typedef unsigned char      U08;
-typedef signed   short int S16;
-typedef unsigned short int U16;
+typedef signed   char             S08;
+typedef unsigned char             U08;
+typedef signed   short int        S16;
+typedef unsigned short int        U16;
+
 
 typedef signed   long int         S32;
 typedef unsigned long int         U32;
 typedef float                     F32;
 typedef double                    D64;
-typedef signed   long long int    S64;
-typedef unsigned long long int    U64;
+typedef signed   long long int    S64; 
+typedef unsigned long long int    U64; 
 
 typedef S08                      *PS08;
 typedef U08                      *PU08;
@@ -31,8 +32,11 @@ typedef S32                      *PS32;
 typedef U32                      *PU32;
 typedef F32                      *PF32;
 typedef D64                      *PD64;
-typedef signed   long long int   *PS64;
+typedef signed   long long int   *PS64; 
 typedef unsigned long long int   *PU64;
+
+typedef U08 BOOL;
+
 
 #ifndef FALSE
 #define FALSE       0
@@ -46,6 +50,7 @@ enum{
   ELV_CNR_MASK_AUTO, // check elv & cnr
   ELV_CNR_MASK_ELV_ONLY,
   ELV_CNR_MASK_CNR_ONLY };
+
 
 typedef struct {
   D64 px;
@@ -82,6 +87,8 @@ typedef struct {
   D64 lon;
   F32 alt;
 } LLA_T;
+
+
 
 typedef struct {
   S16 prn;      // satellite id
@@ -125,6 +132,8 @@ typedef struct{
   U08 qzss_enable_disable;
   U08 qzss_max_num;
 } QZSS_PARAMETER_T;
+
+
 
 
 // NMEA types

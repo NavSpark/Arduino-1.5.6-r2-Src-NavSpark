@@ -12,9 +12,10 @@
 #define ST_CONST_INCLUDED
 
 #define ST_MAX_GPS_NCHAN       20
-#define ST_MAX_GLO_NCHAN       0
-#define ST_MAX_GAL_NCHAN       0
-#define ST_MAX_BD2_NCHAN       0
+#define ST_MAX_GLO_NCHAN       0           
+#define ST_MAX_GAL_NCHAN       0          
+#define ST_MAX_BD2_NCHAN       0           
+
 
 
 
