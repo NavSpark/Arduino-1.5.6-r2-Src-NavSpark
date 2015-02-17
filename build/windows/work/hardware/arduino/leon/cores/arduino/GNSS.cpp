@@ -295,6 +295,14 @@ uint8_t GNSSTime::centisecond(void)
 	return ((uint8_t)centi);
 }
 
+uint8_t GNSSTime::decisecond(void)
+{
+        float deci;
+        deci = gnssSecond - second();
+        deci = deci * 10.0;
+        return ((uint16_t)deci);
+}
+
 uint16_t GNSSTime::formatString(char* str)
 {
 	char A_P = 'A';

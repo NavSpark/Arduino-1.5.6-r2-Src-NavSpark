@@ -87,7 +87,9 @@ struct GNSSTime
 		uint8_t minute(void);
 		uint8_t second(void);
 		uint8_t centisecond(void);
+                uint8_t decisecond(void);
 		uint16_t formatString(char* str);
+                uint16_t LCDformatString(char* str);
 };
 
 struct GNSSLocation
@@ -100,7 +102,9 @@ struct GNSSLocation
 		double latitude(void);
 		double longitude(void);
 		uint16_t latitude_formatString(char* str);
+                uint16_t latitude_LCDformatString(char* str);
 		uint16_t longitude_formatString(char* str);
+                uint16_t longitude_LCDformatString(char* str);
 };
 
 struct GNSSAltitude
