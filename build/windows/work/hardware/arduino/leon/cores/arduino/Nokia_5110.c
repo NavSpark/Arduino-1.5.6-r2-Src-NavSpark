@@ -7,6 +7,8 @@ extern "C" {
 #endif
     
 #define _CHECK_MARK 0xf0
+uint8_t PCD8544Row;
+uint8_t PCD8544Column;
 
 // **********************************************************************
 // Description: Send data/command to the PCD8544 LCD controller
@@ -69,6 +71,10 @@ void pcd8544CleanScreen(void)
 	for (i = 0; i < 504; i++) {
 		pcd8544SerialBus(PCD8544_SCE_PIN, PCD8544_DC_PIN, PCD8544_SCLK_PIN, PCD8544_SDIN_PIN, PCD8544_RES_PIN, &digit);
 	}
+	// move cursor back to (0,0)
+	PCD8544Row = 0;
+	PCD8544Column = 0;
+	pcd8544SetCursor(0, 0);
 }
 
 // **********************************************************************
@@ -114,6 +120,8 @@ void pcd8544Init(void)
 
 	// clean the RAM
 	pcd8544CleanScreen();
+	PCD8544Row = 0;
+	PCD8544Column = 0;
 }
 
 // **********************************************************************
@@ -169,24 +177,24 @@ sPCD8544Digit pcd8544_char[] =
         {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x78, 0x14, 0x12, 0x14, 0x78, 0x00}}, //'A'
         {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x52, 0x52, 0x2c, 0x00, 0x00}}, //'B'
         {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x3c, 0x42, 0x42, 0x42, 0x00, 0x00}}, //'C'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x42, 0x42, 0x3c, 0x00, 0x00}},  //'D'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x4a, 0x4a, 0x4a, 0x00, 0x00}},  //'E'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x12, 0x12, 0x02, 0x00, 0x00}},  //'F'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x3c, 0x42, 0x52, 0x34, 0x00, 0x00}},  //'G'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x10, 0x10, 0x7e, 0x00, 0x00}},  //'H'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x00, 0x42, 0x7e, 0x42, 0x00, 0x00}},   //'I'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x20, 0x40, 0x3e, 0x00, 0x00, 0x00}},   //'J'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x28, 0x24, 0x42, 0x00, 0x00}},  //'K'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x40, 0x40, 0x40, 0x00, 0x00}},  //'L'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x42, 0x42, 0x3c, 0x00, 0x00}}, //'D'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x4a, 0x4a, 0x4a, 0x00, 0x00}}, //'E'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x12, 0x12, 0x02, 0x00, 0x00}}, //'F'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x3c, 0x42, 0x52, 0x34, 0x00, 0x00}}, //'G'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x10, 0x10, 0x7e, 0x00, 0x00}}, //'H'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x00, 0x42, 0x7e, 0x42, 0x00, 0x00}}, //'I'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x20, 0x40, 0x3e, 0x00, 0x00, 0x00}}, //'J'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x28, 0x24, 0x42, 0x00, 0x00}}, //'K'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x40, 0x40, 0x40, 0x00, 0x00}}, //'L'
         {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x04, 0x08, 0x04, 0x7e, 0x00}}, //'M'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x08, 0x10, 0x7e, 0x00, 0x00}},  //'N'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x3c, 0x42, 0x42, 0x3c, 0x00, 0x00}},  //'O'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x12, 0x12, 0x0c, 0x00, 0x00}},  //'P'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x3c, 0x42, 0x62, 0x7c, 0x00, 0x00}},  //'Q'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x12, 0x32, 0x4c, 0x00, 0x00}},  //'R'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x6e, 0x4a, 0x52, 0x76, 0x00, 0x00}},  //'S'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x08, 0x10, 0x7e, 0x00, 0x00}}, //'N'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x3c, 0x42, 0x42, 0x3c, 0x00, 0x00}}, //'O'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x12, 0x12, 0x0c, 0x00, 0x00}}, //'P'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x3c, 0x42, 0x62, 0x7c, 0x00, 0x00}}, //'Q'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x7e, 0x12, 0x32, 0x4c, 0x00, 0x00}}, //'R'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x6e, 0x4a, 0x52, 0x76, 0x00, 0x00}}, //'S'
         {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x02, 0x02, 0x7e, 0x02, 0x02, 0x00}}, //'T'
-        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x3e, 0x40, 0x40, 0x3e, 0x00, 0x00}},  //'U'
+        {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x3e, 0x40, 0x40, 0x3e, 0x00, 0x00}}, //'U'
         {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x06, 0x38, 0x40, 0x38, 0x06, 0x00}}, //'V'
         {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x3e, 0x40, 0x20, 0x40, 0x3e, 0x00}}, //'W'
         {{1, 1, 1, 1, 1, 1, 1}, {0x00, 0x46, 0x28, 0x10, 0x28, 0x46, 0x00}}, //'X'
@@ -209,6 +217,7 @@ sPCD8544Digit pcd8544_symbol[] =
 
 void printOnLCD(uint8_t ch)
 {
+    boolean print = true;
     sPCD8544Data digit;
     digit.numData = 7;
     
@@ -230,44 +239,66 @@ void printOnLCD(uint8_t ch)
         case ' ':
             digit.type = &pcd8544_symbol[0].type[0];
             digit.data = &pcd8544_symbol[0].data[0];
+            PCD8544Column++;
             break;
             
         case ':':
             digit.type = &pcd8544_symbol[1].type[0];
             digit.data = &pcd8544_symbol[1].data[0];
+            PCD8544Column++;
             break;
             
         case '.':
             digit.type = &pcd8544_symbol[2].type[0];
             digit.data = &pcd8544_symbol[2].data[0];
+            PCD8544Column++;
             break;
         
         case '"':
             digit.type = &pcd8544_symbol[3].type[0];
             digit.data = &pcd8544_symbol[3].data[0];
+            PCD8544Column++;
             break;
         
         case '\'':
             digit.type = &pcd8544_symbol[4].type[0];
             digit.data = &pcd8544_symbol[4].data[0];
+            PCD8544Column++;
             break;
         
         case '-':
             digit.type = &pcd8544_symbol[5].type[0];
             digit.data = &pcd8544_symbol[5].data[0];
+            PCD8544Column++;
             break;
         
         case 0xf0:
             digit.type = &pcd8544_symbol[7].type[0];
             digit.data = &pcd8544_symbol[7].data[0];
+            PCD8544Column++;
             break;
         
         case '?':
             digit.type = &pcd8544_symbol[8].type[0];
             digit.data = &pcd8544_symbol[8].data[0];
-            break;    
+            PCD8544Column++;
+            break;
+            
+        case '\r':
+            print = false;
+            PCD8544Column = 0;
+            pcd8544SetCursor(PCD8544Row, PCD8544Column);
+            break;
+            
+        case '\n':
+            print = false;
+            PCD8544Row = (PCD8544Row + 1) % 6;
+            pcd8544SetCursor(PCD8544Row, PCD8544Column);
+            break;  
     }
-    pcd8544SerialBus(PCD8544_SCE_PIN, PCD8544_DC_PIN, PCD8544_SCLK_PIN, PCD8544_SDIN_PIN, PCD8544_RES_PIN, &digit);
+    if (print == true) {
+      pcd8544SerialBus(PCD8544_SCE_PIN, PCD8544_DC_PIN, PCD8544_SCLK_PIN, PCD8544_SDIN_PIN, PCD8544_RES_PIN, &digit);
+    }
 }
 
 void pcd8544DigitPlot(void)
