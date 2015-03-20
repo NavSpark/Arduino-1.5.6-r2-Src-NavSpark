@@ -24,7 +24,7 @@
 #include "stdint.h"
 #include "sti_gnss_lib.h"
 #include "HardwareSerial.h"
-#include "Wiring_intr.h"
+#include "wiring_intr.h"
 
 // **********************************************************************
 // Description: declaration of functions exported in C naming convention
